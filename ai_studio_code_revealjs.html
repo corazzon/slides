@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reveal.js 기능 데모</title>
+
+    <!-- 1. Reveal.js 코어 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    
+    <!-- 2. 테마 CSS (기본: black, 런타임 변경 가능) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/dracula.css" id="theme-style">
+
+    <!-- 3. 코드 하이라이트 플러그인용 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <!-- 커스텀 스타일 및 UI 컨트롤 CSS -->
+    <style>
+        /* UI 컨트롤 패널 스타일 */
+        #demo-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+            color: white;
+        }
+        #demo-controls label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #demo-controls select {
+            width: 150px;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+        }
+        
+        /* 제목 및 내용 폰트 크기 */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+            font-size: 24pt !important;
+        }
+        .reveal p, .reveal li, .reveal td, .reveal th, .reveal code, .reveal pre, .reveal ul, .reveal ol, .reveal dl, .reveal dd, .reveal dt {
+            font-size: 17pt !important;
+        }
+
+        /* Auto-Animate 데모용 스타일 */
+        .r-frame {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .box {
+            background: #2a9d8f;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            transition: all 0.5s ease;
+        }
+
+        /* 인포그래픽 데모용 스타일 */
+        .flow-diagram { display: flex; justify-content: space-around; align-items: center; width: 100%; }
+        .flow-box { border: 2px solid #ccc; padding: 20px; border-radius: 8px; text-align: center; transition: all 0.8s ease; }
+        .flow-arrow { font-size: 2em; margin: 0 20px; transition: all 0.8s ease; }
+        .flow-box.active { border-color: #42affa; background-color: rgba(66, 175, 250, 0.2); transform: scale(1.1); }
+        
+        /* 하이라이트 색상 클래스 */
+        .highlight-sky { color: #3498db; }
+        .highlight-green { color: #2ecc71; }
+        .highlight-yellow { color: #f1c40f; }
+        .highlight-red { color: #e74c3c; }
+        .highlight-purple { color: #9b59b6; }
+
+        /* 배경색 선택기 스타일 */
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: transform 0.2s;
+        }
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- UI 컨트롤 (테마 및 전환 효과 변경) -->
+    <div id="demo-controls">
+        <label for="theme-selector">테마 변경:</label>
+        <select id="theme-selector">
+            <option value="black">Black</option>
+            <option value="white">White</option>
+            <option value="league">League</option>
+            <option value="sky">Sky</option>
+            <option value="beige">Beige</option>
+            <option value="simple">Simple</option>
+            <option value="serif">Serif</option>
+            <option value="solarized">Solarized</option>
+            <option value="moon">Moon</option>
+            <option value="dracula">Dracula</option>
+        </select>
+        <label for="transition-selector">전환 효과 변경:</label>
+        <select id="transition-selector">
+            <option value="slide">Slide</option>
+            <option value="fade">Fade</option>
+            <option value="zoom">Zoom</option>
+            <option value="convex">Convex</option>
+            <option value="concave">Concave</option>
+            <option value="none">None</option>
+        </select>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- 소개 -->
+            <section>
+                <h2>Reveal.js 기능 데모</h2>
+                <p>효과(Transitions)와 애니메이션(Fragments, Auto-Animate 등) 시연</p>
+                <p style="font-size: 0.6em; margin-top: 50px;">
+                    키보드 방향키(←, →, ↑, ↓) 또는 스페이스바로 슬라이드를 넘겨보세요.<br>
+                    우측 하단 컨트롤러로 테마와 전환 효과를 실시간 변경할 수 있습니다.
+                </p>
+            </section>
+
+            <!-- 전환 효과 비교 -->
+            <section>
+                <section data-transition="slide">
+                    <h3>전환 효과 (Transitions)</h3>
+                    <p>슬라이드 간 전환 방식을 지정합니다.</p>
+                    <p>아래로 이동하여 다양한 효과를 확인하세요. (기본: Slide)</p>
+                </section>
+                <section data-transition="fade">
+                    <h4>Fade</h4>
+                    <p>부드럽게 사라지고 나타나는 효과입니다.</p>
+                </section>
+                <section data-transition="zoom">
+                    <h4>Zoom</h4>
+                    <p>이전 슬라이드를 축소하고 다음 슬라이드를 확대합니다.</p>
+                </section>
+                <section data-transition="convex">
+                    <h4>Convex</h4>
+                    <p>3D 공간에서 볼록한 형태로 회전하는 효과입니다.</p>
+                </section>
+                <section data-transition="concave">
+                    <h4>Concave</h4>
+                    <p>3D 공간에서 오목한 형태로 회전하는 효과입니다.</p>
+                </section>
+                 <section data-transition="none">
+                    <h4>None</h4>
+                    <p>전환 효과 없이 즉시 변경됩니다.</p>
+                </section>
+            </section>
+
+            <!-- Fragment 단계 시연 -->
+            <section>
+                <h3>단계별 표시 (Fragments)</h3>
+                <p>하나의 슬라이드 안에서 요소를 순차적으로 보여줍니다.</p>
+                <ul>
+                    <li class="fragment">첫 번째 항목이 나타납니다.</li>
+                    <li class="fragment fade-up">두 번째 항목은 아래에서 위로 나타납니다.</li>
+                    <li class="fragment highlight-blue">세 번째 항목은 파란색으로 강조됩니다.</li>
+                    <li class="fragment grow">네 번째 항목은 커지면서 나타납니다.</li>
+                </ul>
+                <p class="fragment" data-fragment-index="1">
+                    <code>data-fragment-index</code>를 사용하면,
+                </p>
+                <p class="fragment" data-fragment-index="1">
+                    여러 요소를 동시에 나타나게 할 수 있습니다.
+                </p>
+            </section>
+
+
+            <section>
+				<!-- Backgrounds Intro -->
+				<section>
+					<h2>다양한 슬라이드 배경</h2>
+					<p>각 슬라이드에 개성있는 배경을 적용하여 시각적 효과를 극대화할 수 있습니다.</p>
+					<p class="fragment">다음 슬라이드들에서 직접 확인해보세요.</p>
+				</section>
+
+                <section data-background-color="hsl(200, 50%, 30%)">
+                    <h3>배경 색상</h3>
+                    <p><code>data-background-color</code> 속성으로 단색 배경을 지정합니다.</p>
+                </section>
+				<!-- Interactive Background Color Changer -->
+				<section id="bg-color-slide">
+					<h2>인터랙티브 배경색 변경</h2>
+					<p>아래 색상 팔레트를 클릭하여 이 슬라이드의 배경색을 직접 바꿔보세요.</p>
+					<div class="color-palette">
+						<div class="color-swatch" style="background-color: #2c3e50;" data-color="#2c3e50"></div>
+						<div class="color-swatch" style="background-color: #8e44ad;" data-color="#8e44ad"></div>
+						<div class="color-swatch" style="background-color: #2980b9;" data-color="#2980b9"></div>
+						<div class="color-swatch" style="background-color: #27ae60;" data-color="#27ae60"></div>
+						<div class="color-swatch" style="background-color: #f39c12;" data-color="#f39c12"></div>
+						<div class="color-swatch" style="background-color: #d35400;" data-color="#d35400"></div>
+						<div class="color-swatch" style="background-color: #c0392b;" data-color="#c0392b"></div>
+					</div>
+					<code style="font-size:16pt; margin-top: 30px;">data-background-color</code>
+				</section>
+
+				<!-- Background Image -->
+                <section data-background-image="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" data-background-size="cover" data-background-opacity="0.5">
+                    <h3>배경 이미지</h3>
+                    <p><code>data-background-image</code> 속성으로 배경 이미지를 지정하고 투명도를 조절할 수 있습니다.</p>
+                </section>
+				<section data-background-image="https://picsum.photos/id/1015/1200/800" data-background-opacity="0.4">
+					<h2>배경: 이미지</h2>
+					<p><code>data-background-image</code> 속성</p>
+					<p><code>data-background-opacity</code> 로 투명도 조절</p>
+				</section>
+			
+				<!-- Background Iframe -->
+				<section data-background-iframe="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.035773634839!2d126.97523781562933!3d37.57801887979567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca2c1a8929161%3A0xb1b0a514b35e2363!2z6rSR7ZmU66y4!5e0!3m2!1sko!2skr!4v1655198083049!5m2!1sko!2skr" data-background-interactive>
+					<h2>배경: Iframe (인터랙티브)</h2>
+					<p>웹사이트나 지도를 배경으로 삽입하고 상호작용할 수 있습니다.</p>
+					<p><code>data-background-interactive</code> 속성을 추가하세요.</p>
+				</section>
+				
+				<!-- Background Gradient -->
+				<section data-background-gradient="linear-gradient(to right, #283593, #1976D2, #03A9F4)">
+					<h2>배경: 그라데이션</h2>
+					<p><code>data-background-gradient</code> 속성</p>
+				</section>
+
+				<!-- Background Video -->
+				<section data-background-video="https://static.vecteezy.com/system/resources/previews/001/805/173/mp4/abstract-futuristic-glowing-wave-background-free-video.mp4" data-background-video-loop data-background-video-muted>
+					<h2>배경: 비디오</h2>
+					<p><code>data-background-video</code> 속성</p>
+					<p>(자동 재생, 반복, 음소거)</p>
+				</section>
+
+            </section>
+
+            <!-- Auto-Animate -->
+            <section>
+                <section data-auto-animate>
+                    <h3>부드러운 전환: Auto-Animate</h3>
+                    <p>두 슬라이드 간에 동일한 요소가 있다면, <code>auto-animate</code> 기능이 위치, 크기, 색상 변화를 부드럽게 애니메이션으로 처리합니다.</p>
+                    <h1 data-id="title" style="margin-top: 50px;">Hello World</h1>
+                    <p><small>아래 화살표를 눌러보세요.</small></p>
+                </section>
+                <section data-auto-animate>
+                    <h1 data-id="title" style="color: #42affa; transform: translateY(50px);">Hello Reveal.js</h1>
+                    <p><small><code>section</code> 태그에 <code>data-auto-animate</code> 속성을 추가해야 합니다.</small></p>
+                </section>
+                
+                <section data-auto-animate>
+                    <h3>인포그래픽 애니메이션</h3>
+                    <p>도형과 SVG를 활용해 프로세스 변화를 시각화합니다.</p>
+                    <div class="flow-diagram">
+                        <div data-id="step1" class="flow-box active">1. 기획</div>
+                        <div data-id="arrow1" class="flow-arrow">→</div>
+                        <div data-id="step2" class="flow-box">2. 디자인</div>
+                        <div data-id="arrow2" class="flow-arrow">→</div>
+                        <div data-id="step3" class="flow-box">3. 개발</div>
+                    </div>
+                </section>
+                <section data-auto-animate>
+                    <h3>인포그래픽 애니메이션</h3>
+                    <p><code>data-auto-animate</code>로 단계 전환을 표현합니다.</p>
+                    <div class="flow-diagram">
+                        <div data-id="step1" class="flow-box">1. 기획</div>
+                        <div data-id="arrow1" class="flow-arrow" style="opacity: 0.3;">→</div>
+                        <div data-id="step2" class="flow-box active">2. 디자인</div>
+                        <div data-id="arrow2" class="flow-arrow">→</div>
+                        <div data-id="step3" class="flow-box">3. 개발</div>
+                    </div>
+                </section>
+                <section data-auto-animate>
+                    <h3>인포그래픽 애니메이션</h3>
+                    <p>마지막 단계가 강조됩니다.</p>
+                    <div class="flow-diagram">
+                        <div data-id="step1" class="flow-box">1. 기획</div>
+                        <div data-id="arrow1" class="flow-arrow" style="opacity: 0.3;">→</div>
+                        <div data-id="step2" class="flow-box">2. 디자인</div>
+                        <div data-id="arrow2" class="flow-arrow" style="opacity: 0.3;">→</div>
+                        <div data-id="step3" class="flow-box active">3. 개발</div>
+                    </div>
+                </section>
+            </section>
+            
+
+            <!-- Auto-Animate 시연 -->
+            <section data-auto-animate>
+                <h3>자동 애니메이션 (Auto-Animate)</h3>
+                <p>두 슬라이드 간에 동일한 요소의 변화를 부드럽게 연결합니다.</p>
+                <div data-id="box" class="box" style="position: absolute; left: 5%; width: 200px; height: 100px;">
+                    BOX 1
+                </div>
+                <div data-id="box2" class="box" style="position: absolute; right: 5%; width: 200px; height: 100px; background: #e76f51;">
+                    BOX 2
+                </div>
+            </section>
+            <section data-auto-animate>
+                <h3>자동 애니메이션 (Auto-Animate)</h3>
+                <p>위치, 크기, 색상 등이 자동으로 변경됩니다.</p>
+                <div data-id="box" class="box" style="position: absolute; left: 25%; top: 40%; width: 50%; height: 200px; background: #264653; transform: rotate(10deg);">
+                    BOX 1 Transformed
+                </div>
+                <div data-id="box2" class="box" style="position: absolute; left: 40%; top: 75%; width: 200px; height: 100px; background: #f4a261;">
+                    BOX 2 Changed
+                </div>
+            </section>
+            
+
+            <section data-auto-animate>
+                <h3 data-id="title" style="text-align: left; color:#e74c3c;">자동 애니메이션 데모</h3>
+                <div data-id="box" style="background: #e74c3c; width: 200px; height: 200px; margin: 20px 0; border-radius: 50%;"></div>
+                <p data-id="text" style="text-align: left;">위치, 크기, 색상, 모양이 부드럽게 변했습니다. <br><span class="highlight-green">ID가 같은 요소</span>들을 추적합니다.</p>
+            </section>
+            <section data-auto-animate>
+                <h3 data-id="title" style="text-align: right; color:#2a9d8f;">자동 애니메이션 데모</h3>
+                <div data-id="box" style="background: #2a9d8f; width: 400px; height: 100px; margin: 20px 0 20px auto; border-radius: 10px;"></div>
+                <p data-id="text" style="text-align: right;">위치, 크기, 색상, 모양이 부드럽게 변했습니다. <br><span class="highlight-green">ID가 같은 요소</span>들을 추적합니다.</p>
+            </section>
+
+            <!-- 표 시연 -->
+            <section>
+                <h3>표(Table)와 애니메이션</h3>
+                <p>Fragments를 사용해 표의 내용을 단계적으로 보여줄 수 있습니다.</p>
+                <table style="margin: 0 auto;">
+                    <thead>
+                        <tr>
+                            <th>기능</th>
+                            <th>기본</th>
+                            <th>프로</th>
+                            <th>엔터프라이즈</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="fragment">
+                            <td>기본 기능</td>
+                            <td>✓</td>
+                            <td>✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>고급 분석</td>
+                            <td>-</td>
+                            <td>✓</td>
+                            <td>✓</td>
+                        </tr>
+                        <tr class="fragment">
+                            <td>기술 지원</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>테이블(Table) 사용하기</h2>
+                <p>HTML이나 마크다운으로 깔끔한 표를 만들 수 있습니다.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>기능</th>
+                            <th class="highlight-green">지원 여부</th>
+                            <th>비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>마크다운</td>
+                            <td>✔</td>
+                            <td>플러그인 필요</td>
+                        </tr>
+                        <tr>
+                            <td>코드 하이라이팅</td>
+                            <td>✔</td>
+                            <td>플러그인 필요</td>
+                        </tr>
+                        <tr>
+                            <td>PDF 내보내기</td>
+                            <td>✔</td>
+                            <td>브라우저 기능 또는 전문 도구 사용</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <!-- Slide2-Column Layout -->
+            <section>
+                <h3>2단 레이아웃 예시</h3>
+                <div style="display: flex; justify-content: space-around; align-items: flex-start; gap: 20px;">
+                    <div style="flex: 1; text-align: left;">
+                        <h4 class="highlight-sky">장점</h4>
+                        <ul>
+                            <li>정보를 나란히 비교하기 좋습니다.</li>
+                            <li>이미지와 텍스트를 함께 배치할 수 있습니다.</li>
+                            <li>가독성을 높일 수 있습니다.</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; text-align: left;">
+                        <h4 class="highlight-green">구현</h4>
+                        <p>간단한 Flexbox CSS로 구현합니다.</p>
+                        <pre><code class="css" style="font-size: 16pt;">.container { display: flex; }
+.column { flex: 1; }</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>이미지 스타일링</h2>
+                <p>이미지에 CSS를 직접 적용하여 다양한 효과를 줄 수 있습니다.</p>
+                <img src="https://picsum.photos/id/237/200/200" alt="Dog" style="border: 5px solid #fff; border-radius: 50%; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                <img src="https://picsum.photos/id/1025/300/200" alt="Dog" style="margin-left: 20px; filter: grayscale(100%);">
+                <p style="font-size: 16pt;">(원형, 그림자 효과) <span style="margin-left:120px;">(그레이스케일 필터)</span></p>
+            </section>
+
+            <!-- Stretch Layout -->
+            <section>
+                <h2>콘텐츠 늘리기 (Stretch)</h2>
+                <p><code>.r-stretch</code> 클래스를 사용하면 해당 요소가 슬라이드의 남은 세로 공간을 모두 채우도록 만들 수 있습니다.</p>
+                <div class="r-stretch">
+                    <img src="https://picsum.photos/id/433/800/400" alt="Stretched image">
+                </div>
+                <p style="font-size: 14pt;">이미지, 비디오, iframe 등에 유용합니다.</p>
+            </section>
+
+
+            <!-- Infographics Intro -->
+            <section>
+                <h2>인포그래픽과 시각화</h2>
+                <p>HTML/CSS/JS의 모든 기능을 사용 가능하므로, SVG, Canvas, <span class="highlight-green">Chart.js</span>, <span class="highlight-purple">D3.js</span> 등의 라이브러리를 활용하여 풍부한 시각 자료를 손쉽게 만들 수 있습니다.</p>
+            </section>
+
+            <!-- Infographics Example -->
+            <section>
+                <h3>프로젝트 진행도 (SVG 활용)</h3>
+                <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                    <div class="fragment" data-fragment-index="1">
+                        <svg width="120" height="120" viewbox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="transparent" stroke="#444" stroke-width="8" />
+                            <circle cx="60" cy="60" r="54" fill="transparent" stroke="#2ecc71" stroke-width="8" stroke-dasharray="339.292" stroke-dashoffset="33.929" transform="rotate(-90 60 60)"/>
+                        </svg>
+                        <p style="font-size: 16pt;">기획 (90%)</p>
+                    </div>
+                    <div class="fragment" data-fragment-index="2">
+                        <svg width="120" height="120" viewbox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="transparent" stroke="#444" stroke-width="8" />
+                            <circle cx="60" cy="60" r="54" fill="transparent" stroke="#f1c40f" stroke-width="8" stroke-dasharray="339.292" stroke-dashoffset="169.646" transform="rotate(-90 60 60)"/>
+                        </svg>
+                        <p style="font-size: 16pt;">디자인 (50%)</p>
+                    </div>
+                    <div class="fragment" data-fragment-index="3">
+                        <svg width="120" height="120" viewbox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="transparent" stroke="#444" stroke-width="8" />
+                            <circle cx="60" cy="60" r="54" fill="transparent" stroke="#e74c3c" stroke-width="8" stroke-dasharray="339.292" stroke-dashoffset="271.433" transform="rotate(-90 60 60)"/>
+                        </svg>
+                        <p style="font-size: 16pt;">개발 (20%)</p>
+                    </div>
+                </div>
+            </section>
+
+
+            <section>
+                <div style="display:flex; align-items: center; gap: 30px;">
+                    <div style="flex: 1.5;">
+                        <h3>2026년 기술 스택 선호도</h3>
+                        <div class="fragment" style="margin-bottom: 20px;">
+                            <span>React</span>
+                            <div style="background: #555; border-radius: 5px; padding: 2px;">
+                                <div style="width: 85%; background: #3498db; color: black; text-align: right; padding: 5px; border-radius: 5px;">85%</div>
+                            </div>
+                        </div>
+                        <div class="fragment" style="margin-bottom: 20px;">
+                            <span>Vue.js</span>
+                            <div style="background: #555; border-radius: 5px; padding: 2px;">
+                                <div style="width: 65%; background: #2ecc71; color: black; text-align: right; padding: 5px; border-radius: 5px;">65%</div>
+                            </div>
+                        </div>
+                        <div class="fragment" style="margin-bottom: 20px;">
+                            <span>Svelte</span>
+                            <div style="background: #555; border-radius: 5px; padding: 2px;">
+                                <div style="width: 40%; background: #e67e22; color: black; text-align: right; padding: 5px; border-radius: 5px;">40%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="flex: 1;" class="fragment">
+                        <p>시각적인 차트는 청중의 이해를 돕고 프레젠테이션을 더 매력적으로 만듭니다.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 인포그래픽 애니메이션 -->
+            <section>
+                <section data-auto-animate>
+                    <h3>인포그래픽 애니메이션 (SVG)</h3>
+                    <svg class="infographic-svg" viewBox="0 0 500 300" data-id="chart">
+                        <rect data-id="bar1" x="50" y="250" width="80" height="50" fill="#42affa"></rect>
+                        <text x="90" y="240" text-anchor="middle" fill="white">Q1</text>
+                        <rect data-id="bar2" x="190" y="200" width="80" height="100" fill="#f87d75"></rect>
+                        <text x="230" y="190" text-anchor="middle" fill="white">Q2</text>
+                        <rect data-id="bar3" x="330" y="150" width="80" height="150" fill="#84f8b4"></rect>
+                        <text x="370" y="140" text-anchor="middle" fill="white">Q3</text>
+                    </svg>
+                    <p>분기별 실적 (초기)</p>
+                </section>
+                <section data-auto-animate>
+                    <h3>인포그래픽 애니메이션 (SVG)</h3>
+                    <svg class="infographic-svg" viewBox="0 0 500 300" data-id="chart">
+                        <rect data-id="bar1" x="50" y="180" width="80" height="120" fill="#42affa"></rect>
+                        <text x="90" y="170" text-anchor="middle" fill="white">Q1</text>
+                        <rect data-id="bar2" x="190" y="230" width="80" height="70" fill="#f87d75"></rect>
+                        <text x="230" y="220" text-anchor="middle" fill="white">Q2</text>
+                        <rect data-id="bar3" x="330" y="50" width="80" height="250" fill="#84f8b4"></rect>
+                        <text x="370" y="40" text-anchor="middle" fill="white">Q3</text>
+                    </svg>
+                    <p>분기별 실적 (최종)</p>
+                </section>
+            </section>
+            
+            <!-- Youtube Embed -->
+            <section>
+                <h3>Youtube 영상 삽입</h3>
+                <iframe class="r-stretch" src="https://www.youtube.com/embed/9rbm29bCjaQ?si=SI3cMqaIw_QL-ivw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </section>
+            
+            <!-- Slide 32: Fit Text -->
+            <section>
+                <h2>텍스트 크기 자동 조절</h2>
+                <p><code>.r-fit-text</code> 클래스를 사용하면 텍스트가 컨테이너 너비에 꽉 차도록 자동으로 크기가 조절됩니다.</p>
+                <h2 class="r-fit-text" style="margin-top: 50px;">이 텍스트는 공간에 맞게 크기가 자동 조절됩니다.</h2>
+                <h3 class="r-fit-text fragment">이렇게 아주아주 긴 텍스트 문장도 컨테이너 크기에 맞춰서 자동으로 줄어들어 한 줄에 표시됩니다.</h3>
+            </section>
+
+            <!-- 플러그인 활용 -->
+            <section>
+                <section>
+                    <h3>플러그인 활용</h3>
+                    <p>Zoom, Search, Notes, Math 등 필수 플러그인 사용법입니다.</p>
+                </section>
+                <section>
+                    <h4>줌 (Zoom)</h4>
+                    <p><code>Alt</code> (macOS: <code>Option</code>) 키를 누른 상태에서 확대하고 싶은 요소를 클릭하세요.</p>
+                    <img src="https://picsum.photos/id/237/400/250" alt="강아지" style="cursor: pointer;" class="r-frame">
+                </section>
+                <section>
+                    <h4>검색 (Search)</h4>
+                    <p><code>Ctrl + Shift + F</code> (macOS: <code>Cmd + Shift + F</code>)를 눌러 전체 프레젠테이션에서 텍스트를 검색할 수 있습니다.</p>
+                    <p class="fragment">"데모"를 검색해보세요.</p>
+                </section>
+                <!-- Speaker Notes -->
+                <section>
+                    <h2>발표자 노트 (Speaker Notes)</h2>
+                    <p>키보드에서 <span class="highlight-yellow">'S'</span> 키를 눌러보세요.</p>
+                    <p>발표자만 볼 수 있는 별도의 창에 메모, 다음 슬라이드 미리보기, 타이머 등이 표시되어 발표를 도와줍니다.</p>
+                    <aside class="notes">
+                        이 부분은 발표자만 볼 수 있는 비밀 메모입니다.
+                        - 다음 슬라이드는 인포그래픽 예시입니다.
+                        - 시각 자료의 중요성을 강조하고, Chart.js 같은 라이브러리를 활용할 수 있다고 언급하세요.
+                    </aside>
+                </section>
+                <section>
+                    <h4>발표자 노트 (Notes)</h4>
+                    <p>키보드에서 <code>S</code> 키를 누르면 발표자 노트 창이 열립니다.</p>
+                    <p style="font-size: 0.7em;">이 창은 청중에게는 보이지 않으며, 발표 시간, 다음 슬라이드 미리보기, 발표자 노트 등을 확인할 수 있습니다.</p>
+                    <aside class="notes">
+                        여기는 발표자 노트입니다. 이 슬라이드에서 강조할 점을 적어둘 수 있습니다.
+                        - S 키를 눌러 발표자 뷰를 열 수 있음을 시연하기
+                        - 시간 관리의 중요성 언급
+                    </aside>
+                </section>
+
+                <!-- 수학식 렌더링 -->
+                <section>
+                    <h3>수학식 렌더링 (KaTeX)</h3>
+                    <p><code>RevealMath.KaTeX</code> 플러그인을 사용하여 수학식을 렌더링합니다.</p>
+                    <p>인라인 수식: 아인슈타인의 질량-에너지 등가 원리 \\( E = mc^2 \\) 입니다.</p>
+                    <p>블록 수식:</p>
+                    <p>$$ \frac{-b \pm \sqrt{b^2-4ac}}{2a} $$</p>
+                    <p class="fragment">오일러 항등식: $$ e^{i\pi} + 1 = 0 $$</p>
+                </section>
+                
+                <section>
+                    <h4>수학식 (Math)</h4>
+                    <p>KaTeX 플러그인을 사용하여 LaTeX 형식의 수학식을 렌더링합니다.</p>
+                    <p>인라인 수식: \\( E = mc^2 \\)</p>
+                    <p>블록 수식:</p>
+                    <p>$$ f(x) = \int_{-\infty}^\infty \hat f(\xi)\,e^{2 \pi i \xi x} \,d\xi $$</p>
+                </section>
+            </section>
+            
+            <!-- 테마 전환 UI 안내 -->
+            <section>
+                <h3>테마 및 효과 전환</h3>
+                <p>화면 하단의 컨트롤 패널을 이용해 실시간으로 테마와 전환 효과를 변경할 수 있습니다.</p>
+                <p class="fragment">이 기능은 이 데모 페이지에 추가된 커스텀 JavaScript로 구현되었습니다.</p>
+                <pre class="fragment"><code class="language-javascript">
+// 테마 변경 로직 예시
+const themeLink = document.querySelector('#theme-style');
+const themeSelector = document.querySelector('#theme-selector');
+
+themeSelector.addEventListener('change', event => {
+    const theme = event.target.value;
+    themeLink.href = `https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/${theme}.css`;
+});
+                </code></pre>
+            </section>
+
+
+            <!-- Slide 33: Plugins -->
+
+            <section>
+                <section>
+                    <h2>강력한 플러그인 생태계</h2>
+                    <p>reveal.js의 핵심은 다양한 공식/커뮤니티 플러그인입니다.</p>
+                    <p>이 프레젠테이션에서도 아래 플러그인들이 사용되고 있습니다.</p>
+                    <ul>
+                        <li>Markdown / Highlight / Math</li>
+                        <li>Notes (발표자 노트)</li>
+                        <li>Zoom / Search</li>
+                    </ul>
+                </section>
+
+                <!-- Zoom Plugin -->
+                <section>
+                    <h2>Zoom 플러그인</h2>
+                    <p><span class="highlight-yellow">Alt (또는 Ctrl)</span> 키를 누른 채로 화면의 특정 부분을 클릭해보세요.</p>
+                    <p>해당 영역이 확대되며, 다시 클릭하면 원래 크기로 돌아옵니다. 이미지나 다이어그램의 세부 사항을 강조할 때 유용합니다.</p>
+                </section>
+
+                <!-- Overview Mode -->
+                <section>
+                    <h2>전체 보기 모드 (Overview)</h2>
+                    <p><span class="highlight-yellow">Esc</span> 키를 눌러보세요.</p>
+                    <p>전체 슬라이드를 한 눈에 보고 원하는 슬라이드로 즉시 이동할 수 있습니다. 발표의 전체 구조를 파악하거나 특정 슬라이드로 빠르게 점프할 때 편리합니다.</p>
+                </section>
+                
+                <!-- Fullscreen -->
+                <section>
+                    <h2>전체 화면 모드</h2>
+                    <p><span class="highlight-yellow">F</span> 키를 누르면 프레젠테이션이 브라우저 전체 화면으로 전환되어 몰입감을 높여줍니다.</p>
+                </section>
+
+                <!-- Pause Mode -->
+                <section>
+                    <h2>일시 정지 모드</h2>
+                    <p>발표 중 잠시 화면을 가리고 싶을 때 <span class="highlight-yellow">B</span> 키 또는 <span class="highlight-yellow">.</span> (마침표) 키를 눌러보세요.</p>
+                    <p>화면이 검게 변하며, 청중의 시선을 발표자에게 집중시킬 수 있습니다.</p>
+                </section>
+            </section>
+
+            <!-- Slide 39: Shortcuts Summary -->
+            <section>
+                <h2>주요 단축키 모음</h2>
+                <table style="font-size: 16pt; margin: auto;">
+                    <thead>
+                        <tr><th>키</th><th>기능</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>F</td><td>전체 화면</td></tr>
+                        <tr><td>S</td><td>발표자 노트</td></tr>
+                        <tr><td>Esc / O</td><td>전체 보기 모드</td></tr>
+                        <tr><td>B / .</td><td>화면 일시 정지 (검은 화면)</td></tr>
+                        <tr><td>Alt/Ctrl + Click</td><td>화면 확대/축소</td></tr>
+                        <tr><td>Ctrl + Shift + F</td><td>내용 검색</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            
+            <!-- 6. Mermaid 다이어그램 -->
+            <section>
+                <section>
+                    <h3>Mermaid 다이어그램</h3>
+                    <p>텍스트 기반으로 다이어그램을 생성합니다.</p>
+                    <p style="color: #e74c3c; font-weight: bold;">시각화가 보이지 않는다면 브라우저를 새로고침 해주세요</p>
+                </section>
+                <section>
+                    <h4>플로우 차트 (Flowchart)</h4>
+                    <p style="color: #e74c3c; font-weight: bold;">시각화가 보이지 않는다면 브라우저를 새로고침 해주세요</p>
+                    <div style="display: flex; gap: 40px; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <div class="mermaid">
+                    flowchart TD
+                        A[사용자 요청] --> B{인증 확인};
+                        B --&gt;|성공| C[데이터 처리];
+                        B --&gt;|실패| D[오류 반환];
+                        C --> E[결과 전송];
+                            </div>
+                        </div>
+                        <div style="flex: 0.5;">
+                            <pre><code class="language-mermaid">
+                    flowchart TD
+                        A[사용자 요청] --> B{인증 확인};
+                        B --&gt;|성공| C[데이터 처리];
+                        B --&gt;|실패| D[오류 반환];
+                        C --> E[결과 전송];
+                            </code></pre>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h4>시퀀스 다이어그램 (Sequence Diagram)</h4>
+                    <p style="color: #e74c3c; font-weight: bold;">시각화가 보이지 않는다면 브라우저를 새로고침 해주세요</p>
+                    <div class="mermaid">
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: 안녕, John! 잘 지내?
+    loop Healthcheck
+        John->>John: 상태 확인
+    end
+    Note right of John: 생각 중...
+    John-->>Alice: 안녕 Alice! 잘 지내.
+    Bob->>Alice: 나도 여기 있어!
+                    </div>
+                </section>
+                <section>
+                    <h4>간트 차트 (Gantt Chart)</h4>
+                    <div class="mermaid">
+gantt
+    title 프로젝트 A 타임라인
+    dateFormat  YYYY-MM-DD
+    section 기획
+    기획 및 분석      :done,    des1, 2030-10-01, 7d
+    디자인           :active,  des2, 2030-10-08, 5d
+    section 개발
+    프론트엔드 개발    :         des3, 2030-10-14, 10d
+    백엔드 개발       :         des4, 2030-10-14, 12d
+                    </div>
+                </section>
+            </section>
+            
+
+            <!-- 코드 하이라이트 시연 -->
+            <section>
+                <h3>코드 하이라이트</h3>
+                <p><code>RevealHighlight</code> 플러그인을 사용하여 코드를 보여줍니다.</p>
+                <pre><code class="language-javascript" data-line-numbers="1-11|3-5|7-9|10" data-ln-start-from="10">
+                    // 예제: 간단한 JavaScript 함수
+                    function calculateSum(arr) {
+                      let sum = 0;
+                      for (let i = 0; i < arr.length; i++) {
+                        sum += arr[i];
+                      }
+                      return sum;
+                    }
+                    
+                    const numbers = [1, 2, 3, 4, 5];
+                    console.log(calculateSum(numbers)); // 15
+                </code></pre>
+                <p style="font-size: 0.6em;">
+                    <code>data-line-numbers</code> 속성으로 특정 라인을 단계별로 강조할 수 있습니다.
+                </p>
+            </section>
+
+            <!-- 배포/인쇄 안내 -->
+            
+            <!-- Slide PDF Export -->
+            <section>
+                <h3>인쇄 및 PDF 내보내기</h3>
+                <p>이 프레젠테이션은 PDF 파일로 쉽게 내보낼 수 있습니다.</p>
+                <p>프레젠테이션 주소 뒤에 <code>?print-pdf</code>를 추가하여 인쇄용 페이지를 엽니다.</p>
+                <p class="fragment">그 후 브라우저의 인쇄 기능(Ctrl+P)을 사용하여 PDF로 저장합니다.</p>
+                <p class="fragment" style="font-size: 16pt;">
+                    <strong class="highlight-red">전문가 팁:</strong> 복잡한 애니메이션이나 인터랙티브 요소까지 완벽하게 캡쳐하려면 <a href="https://github.com/astefanutti/decktape" target="_blank">DeckTape</a>과 같은 커맨드라인 도구를 사용하는 것이 좋습니다.
+                </p>
+            </section>
+
+            <!-- 접근성/성능 팁 -->
+            <section>
+                <h3>접근성 및 성능 팁</h3>
+                <p>더 나은 프레젠테이션을 위한 간단한 체크리스트입니다.</p>
+                <ul>
+                    <li class="fragment">✔️ <strong>대비(Contrast):</strong> 배경과 텍스트 색상의 대비를 충분히 확보하세요.</li>
+                    <li class="fragment">✔️ <strong>폰트 크기:</strong> 발표 환경에 맞춰 가독성 있는 폰트 크기를 사용하세요.</li>
+                    <li class="fragment">✔️ <strong>애니메이션:</strong> 과도한 애니메이션은 집중을 방해할 수 있으니 꼭 필요할 때만 사용하세요.</li>
+                    <li class="fragment">✔️ <strong>이미지 최적화:</strong> 고용량 이미지는 로딩 속도를 저하시킬 수 있습니다.</li>
+                </ul>
+            </section>
+
+
+            <!-- 접근성/성능 팁 -->
+            <section>
+                <h3>접근성 및 성능 팁</h3>
+                <ul>
+                    <li><strong>접근성</strong>: 시맨틱 HTML 태그(<code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code> 등)를 사용하고, 이미지에 <code>alt</code> 속성을 제공하여 스크린 리더 사용자를 배려하세요.</li>
+                    <li class="fragment"><strong>성능</strong>: 고화질 배경 이미지나 비디오는 압축하여 사용하세요. <code>loading="lazy"</code> 속성을 이미지에 추가하면 초기 로딩 속도를 개선할 수 있습니다.</li>
+                    <li class="fragment"><strong>가독성</strong>: 테마를 선택할 때 배경과 텍스트의 명도 대비가 충분한지 확인하세요.</li>
+                </ul>
+            </section>
+
+            <!-- 배포 (수직 그룹) -->
+            <section>
+                <section>
+                    <h3>GitHub Pages로 배포하기</h3>
+                    <ol>
+                      <li>GitHub에 새로운 저장소를 만듭니다.</li>
+                      <li>reveal.js 프로젝트 파일 전체를 push 합니다.</li>
+                      <li>저장소의 `Settings` > `Pages` 메뉴로 이동합니다.</li>
+                      <li>`Source`를 `Deploy from a branch`로, `Branch`를 `main` (또는 `master`)으로 설정하고 저장합니다.</li>
+                      <li>잠시 후 공개된 URL로 슬라이드를 확인할 수 있습니다.</li>
+                    </ol>
+                </section>
+                <section>
+                    <h3>Netlify로 배포하기</h3>
+                    <p>더 빠르고 간편한 배포 방법입니다.</p>
+                    <ol>
+                      <li>GitHub에 프로젝트를 push 합니다.</li>
+                      <li>Netlify에 로그인하고 `New site from Git`을 선택합니다.</li>
+                      <li>배포할 GitHub 저장소를 선택합니다.</li>
+                      <li>빌드 설정은 비워두고 `Deploy site`를 클릭하면 즉시 배포가 완료됩니다.</li>
+                    </ol>
+                </section>
+            </section>
+
+            <!-- FAQ/트러블슈팅 -->
+            <section>
+                <h3>문제 해결 (FAQ)</h3>
+                <dl style="text-align: left; font-size: 0.8em;">
+                    <dt class="fragment"><strong>CDN 불러오기 실패</strong></dt>
+                    <dd class="fragment">인터넷 연결을 확인하거나, 브라우저 콘솔(F12)에서 네트워크 오류를 확인하세요.</dd>
+
+                    <dt class="fragment"><strong>플러그인 작동 안 함</strong></dt>
+                    <dd class="fragment"><code>Reveal.initialize</code>의 <code>plugins</code> 배열에 플러그인 변수(예: <code>RevealHighlight</code>)가 올바르게 추가되었는지, 스크립트 로드 순서가 맞는지 확인하세요.</dd>
+
+                    <dt class="fragment"><strong>코드 하이라이트 안 됨</strong></dt>
+                    <dd class="fragment"><code>&lt;pre&gt;&lt;code class="language-xxx"&gt;</code> 구조가 맞는지, <code>RevealHighlight</code> 플러그인이 로드되었는지 확인하세요. 언어 이름(js, html 등)이 정확해야 합니다.</dd>
+                    
+                    <dt class="fragment"><strong>PDF 인쇄 시 레이아웃 깨짐</strong></dt>
+                    <dd class="fragment"><code>?print-pdf</code> 쿼리 파라미터를 사용했는지 확인하세요. 이 모드는 인쇄에 최적화된 스타일을 적용해 줍니다. 일부 브라우저에서는 페이지 크기 설정이 필요할 수 있습니다.</dd>
+                </dl>
+            </section>
+
+            <!-- 더 알아보기 -->
+            <section>
+                <h3>더 알아보기</h3>
+                <ul>
+                    <li><strong>공식 문서</strong>: <a href="https://revealjs.com" target="_blank">https://revealjs.com</a></li>
+                    <li><strong>GitHub 저장소</strong>: <a href="https://github.com/hakimel/reveal.js" target="_blank">https://github.com/hakimel/reveal.js</a></li>
+                    <li><strong>다양한 예제</strong>: 공식 데모 슬라이드를 통해 고급 기능을 확인해 보세요.</li>
+                </ul>
+            </section>
+
+            <!-- Slide Q&A -->
+            <section>
+                <h2>Q & A</h2>
+                <p>더 궁금한 점이 있으신가요?</p>
+                <p><a href="https://revealjs.com" target="_blank" class="highlight-sky">revealjs.com</a>에서 공식 문서를 확인하세요.</p>
+            </section>
+
+            <!-- Slide Thank you -->
+            <section>
+                <h1 class="r-fit-text">감사합니다</h1>
+            </section>
+
+        </div>
+    </div>
+
+    
+    <!-- Mermaid.js (reveal.js보다 먼저 로드) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+    <!-- Reveal.js Mermaid Plugin (Mermaid.js 이후에 로드) -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin@2.1.0/plugin/mermaid/mermaid.js"></script>
+
+    <!-- 4. Reveal.js 코어 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+
+    <!-- 5. 플러그인 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/search/search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+
+    <!-- 6. Reveal.js 초기화 -->
+    <script>
+        Reveal.initialize({
+            // 슬라이드 중앙 정렬
+            center: true,
+            // URL에 현재 슬라이드 번호(#) 표시
+            hash: true,
+            // 기본 전환 효과
+            transition: 'slide',
+			slideNumber: 'c/t',
+
+            // 플러그인 설정
+            plugins: [ RevealHighlight, RevealSearch, RevealZoom, RevealNotes, RevealMath.KaTeX ],
+
+            // 코드 하이라이트 플러그인 옵션
+            highlight: {
+                // 테마 CSS를 자동으로 로드할지 여부
+                // true로 하면 monokai.css 링크를 직접 넣을 필요가 없음
+                // 여기서는 false로 두고 head에서 직접 링크함
+                theme: 'monokai', 
+            },
+
+            // 수학식 플러그인 옵션 (KaTeX)
+            katex: {
+                // KaTeX CDN 경로 지정 가능 (기본값 사용)
+                // version: '0.16.9',
+                // css: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
+                // js: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js'
+            }
+        });
+
+        // --- 커스텀 UI 컨트롤러 스크립트 ---
+        
+        // 테마 변경 핸들러
+        const themeStyleLink = document.getElementById('theme-style');
+        const themeSelector = document.getElementById('theme-selector');
+        themeSelector.addEventListener('change', function(event) {
+            const theme = event.target.value;
+            themeStyleLink.setAttribute('href', `https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/${theme}.css`);
+        });
+
+        // 전환 효과 변경 핸들러
+        const transitionSelector = document.getElementById('transition-selector');
+        transitionSelector.addEventListener('change', function(event) {
+            Reveal.configure({ transition: event.target.value });
+        });
+
+
+        // --- 인터랙티브 기능 스크립트 ---
+        
+        // 배경색 변경 스크립트
+        const swatches = document.querySelectorAll('.color-swatch');
+        swatches.forEach(swatch => {
+            swatch.addEventListener('click', (event) => {
+                const color = event.target.dataset.color;
+                const slide = document.getElementById('bg-color-slide');
+                slide.setAttribute('data-background-color', color);
+                // reveal.js에 배경 변경을 알림
+                Reveal.sync();
+            });
+        });
+
+    </script>
+</body>
+</html>
